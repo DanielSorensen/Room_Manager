@@ -96,11 +96,17 @@ public class Furniture : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         if (pointerOver && pointerDown) moving = true;
 
         if(moving) {
+            transform.SetAsLastSibling();
             position += (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - lastMousePosition;
         }
         if(Input.GetMouseButtonDown(1) && pointerOver) {
             rotated = !rotated;
             RoomManager.SaveRoom(RoomManager.currentRoom);
+        }
+        if(Input.GetMouseButtonUp(2) && pointerOver) {
+            RoomManager.currentRoom.furnitureData.RemoveAt(index);
+            RoomManager.SaveRoom(RoomManager.currentRoom);
+            Destroy(gameObject);
         }
 
         if (!pointerDown) moving = false;

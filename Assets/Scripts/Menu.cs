@@ -29,6 +29,11 @@ public class Menu : MonoBehaviour {
     public TMP_InputField furnitureNameField;
     public TMP_InputField furnitureSizeXField;
     public TMP_InputField furnitureSizeYField;
+    [Header("Edit Furniture Window")]
+    public GameObject editFurnitureWindow;
+    public TMP_InputField editFurnitureNameField;
+    public TMP_InputField editFurnitureSizeXField;
+    public TMP_InputField editFurnitureSizeYField;
 
     void Start() {
         if (SceneManager.GetActiveScene().name == "Main Menu") {
@@ -36,16 +41,29 @@ public class Menu : MonoBehaviour {
         }
         else if (SceneManager.GetActiveScene().name == "Room") {
             RoomManager.LoadRooms();
-            room.rectTransform.sizeDelta = new Vector2(RoomManager.currentRoom.width, RoomManager.currentRoom.height);
+            room.rectTransform.sizeDelta = new Vector2(RoomManager.currentRoom.width, RoomManager.currentRoom.length);
             RoomManager.currentRoom.SpawnAllFurniture(room.transform);
             roomName.text = RoomManager.currentRoom.name;
             LoadFurniture();
-            if (RoomManager.currentRoom.width / RoomManager.currentRoom.height > Camera.main.aspect) {
-                Camera.main.orthographicSize = RoomManager.currentRoom.width / 2 * extraCameraFactor.x;
+            if (RoomManager.ScanForNewFurniture(RoomManager.currentRoom)) {
+                LoadFurniture();
             }
-            else {
-                Camera.main.orthographicSize = RoomManager.currentRoom.height / 2 * extraCameraFactor.y;
-            }
+            ResetCamera();
+        }
+    }
+
+    void Update() {
+        if(SceneManager.GetActiveScene().name == "Room") {
+
+        }
+    }
+
+    public void ResetCamera() {
+        if (RoomManager.currentRoom.width / RoomManager.currentRoom.length > Camera.main.aspect) {
+            Camera.main.orthographicSize = RoomManager.currentRoom.width / 2 * extraCameraFactor.x;
+        }
+        else {
+            Camera.main.orthographicSize = RoomManager.currentRoom.length / 2 * extraCameraFactor.y;
         }
     }
 
@@ -106,7 +124,7 @@ public class Menu : MonoBehaviour {
         if(names.Contains(name.text)) {
             Furniture.Data data = new Furniture.Data(RoomManager.furniture[names.IndexOf(name.text)], Vector2.zero, false);
             RoomManager.currentRoom.furnitureData.Add(data);
-            RoomManager.currentRoom.SpawnFurniture(RoomManager.currentRoom.furnitureData.Count -1, room.transform);
+            RoomManager.currentRoom.SpawnFurniture(RoomManager.currentRoom.furnitureData.Count -1, room.rectTransform);
             SaveRooom();
             CloseFurnitureWindow();
         }
@@ -135,10 +153,62 @@ public class Menu : MonoBehaviour {
         LoadFurniture();
     }
 
+    public void EditFurniture(TextMeshProUGUI name) {
+        List<string> names = RoomManager.furniture.Select((Furniture.Data f) => f.name).ToList();
+        if(names.Contains(name.text)) {
+            Furniture.Data data = RoomManager.furniture[names.IndexOf(name.text)];
+            editFurnitureNameField.text = data.name;
+            editFurnitureSizeXField.text = data.width.ToString();
+            editFurnitureSizeYField.text = data.length.ToString();
+            OpenEditFurnitureWindow();
+        }
+        else {
+            Debug.LogError("The furniture: " + name.text + " does not exist");
+        }
+    }
+    public void FinishEditFurniture() {
+        List<string> names = RoomManager.furniture.Select((Furniture.Data f) => f.name).ToList();
+        if (names.Contains(editFurnitureNameField.text)) {
+            Furniture.Data data = RoomManager.furniture[names.IndexOf(editFurnitureNameField.text)];
+            data.width = float.Parse(editFurnitureSizeXField.text);
+            data.length = float.Parse(editFurnitureSizeYField.text);
+            if (!string.IsNullOrEmpty(data.name) && data.width > 0 && data.length > 0) {
+                RoomManager.furniture[names.IndexOf(data.name)] = data;
+                RoomManager.SyncAllFurniture();
+                RoomManager.currentRoom.SpawnAllFurniture(room.rectTransform);
+                CloseEditFurnitureWindow();
+                OpenFurnitureWindow();
+            }
+        }
+        else {
+            Debug.LogError("The furniture: " + editFurnitureNameField.text + " does not exist");
+        }
+    }
+
+    public void OpenEditFurnitureWindow() {
+        editFurnitureWindow.SetActive(true);
+    }
+    public void CloseEditFurnitureWindow() {
+        editFurnitureWindow.SetActive(false);
+    }
+
     public void SaveRooom() {
         RoomManager.SaveRoom(RoomManager.currentRoom);
     }
     public void ExitRoom() {
         SceneManager.LoadScene("Main Menu");
+    }
+
+    public void DeleteFurniture() {
+        List<string> names = RoomManager.furniture.Select((Furniture.Data f) => f.name).ToList();
+        if (names.Contains(editFurnitureNameField.text)) {
+            Furniture.Data data = RoomManager.furniture[names.IndexOf(editFurnitureNameField.text)];
+            RoomManager.DeleteFurniture(data);
+            LoadFurniture();
+            CloseEditFurnitureWindow();
+        }
+        else {
+            Debug.LogError("The furniture: " + editFurnitureNameField.text + " does not exist");
+        }
     }
 }

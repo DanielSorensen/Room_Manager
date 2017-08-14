@@ -75,7 +75,7 @@ PlayerSettings:
   usePlayerLog: 1
   bakeCollisionMeshes: 0
   forceSingleInstance: 0
-  resizableWindow: 0
+  resizableWindow: 1
   useMacAppStoreValidation: 0
   macAppStoreCategory: public.app-category.apps
   gpuSkinning: 0
@@ -509,14 +509,14 @@ PlayerSettings:
   m_MobileRenderingPath: 1
   metroPackageName: RoomManager
   metroPackageVersion: 1.0.0.0
-  metroCertificatePath: 
-  metroCertificatePassword: 
-  metroCertificateSubject: 
-  metroCertificateIssuer: 
-  metroCertificateNotAfter: 0000000000000000
+  metroCertificatePath: Assets/WSATestCertificate.pfx
+  metroCertificatePassword: "Aixic~c|c`e\x7F>4"
+  metroCertificateSubject: Daniel Sorensen
+  metroCertificateIssuer: Daniel Sorensen
+  metroCertificateNotAfter: 00984130fb33d401
   metroApplicationDescription: Room Manager
   wsaImages: {}
-  metroTileShortName: 
+  metroTileShortName: Room Manager
   metroCommandLineArgsFile: 
   metroTileShowName: 0
   metroMediumTileShowName: 0
@@ -611,12 +611,14 @@ PlayerSettings:
     daydream:
       daydreamIconForeground: {fileID: 0}
       daydreamIconBackground: {fileID: 0}
-  cloudServicesEnabled: {}
+  cloudServicesEnabled:
+    Collab: 0
+    UNet: 1
   facebookSdkVersion: 7.9.4
   apiCompatibilityLevel: 2
-  cloudProjectId: 
-  projectName: 
-  organizationId: 
+  cloudProjectId: 255d1854-8568-428d-8086-ee8227fbd343
+  projectName: Room Manager
+  organizationId: daniel-sorensen
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0

@@ -6,21 +6,21 @@ using UnityEngine;
 public class Room {
 
     public string name;
-    public float width, height;
+    public float width, length;
 
     public List<Furniture.Data> furnitureData;
 
     public Room(string name, Vector2 size, List<Furniture.Data> furnitureData) {
         this.name = name;
         width = size.x;
-        height = size.y;
+        length = size.y;
 
         this.furnitureData = furnitureData;
     }
     public Room(string name, Vector2 size) {
         this.name = name;
         width = size.x;
-        height = size.y;
+        length = size.y;
 
         furnitureData = new List<Furniture.Data>();
     }
@@ -39,6 +39,7 @@ public class Room {
         }
     }
     public void SpawnAllFurniture(Transform parent) {
+        parent.ClearChildren(true);
         for (int i = 0; i < furnitureData.Count; i++) {
             SpawnFurniture(i, parent);
         }

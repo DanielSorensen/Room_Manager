@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Linq;
 
 public static class RoomManager {
     
@@ -108,5 +109,42 @@ public static class RoomManager {
     public static void DeleteFurniture(Furniture.Data furniture) {
         RoomManager.furniture.Remove(furniture);
         SaveFurniture();
+    }
+
+    public static void SyncFurniture(Room room) {
+        List<string> names = furniture.Select((Furniture.Data f) => f.name).ToList();
+        for (int i = 0; i < room.furnitureData.Count; i++) {
+            Furniture.Data data = room.furnitureData[i];
+            if(names.Contains(data.name)) {
+                room.furnitureData[i] = new Furniture.Data(furniture[names.IndexOf(data.name)], new Vector2(data.positionX, data.positionY), data.rotated);
+                SaveRoom(room);
+            }
+            else {
+                furniture.Add(data);
+                SaveFurniture();
+                Debug.Log("Found new furniture: " + data.name + " in the room: " + room.name);
+            }
+        }
+    }
+
+    public static void SyncAllFurniture() {
+        foreach(Room room in LoadRooms()) {
+            SyncFurniture(room);
+        }
+    }
+
+    public static bool ScanForNewFurniture(Room room) {
+        bool foundNew = false;
+        List<string> names = furniture.Select((Furniture.Data f) => f.name).ToList();
+        for (int i = 0; i < room.furnitureData.Count; i++) {
+            Furniture.Data data = room.furnitureData[i];
+            if(!names.Contains(data.name)) {
+                furniture.Add(data);
+                SaveFurniture();
+                foundNew = true;
+                Debug.Log("Found new furniture: " + data.name + " in the room: " + room.name);
+            }
+        }
+        return foundNew;
     }
 }

@@ -128,7 +128,7 @@ public class Furniture : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     }
     public static Furniture Spawn(Data data) {
         if (data.hasTransform) {
-            return Spawn(data.name, new Vector2(data.width, data.height), new Vector2(data.positionX, data.positionY), data.rotated);
+            return Spawn(data.name, new Vector2(data.width, data.length), new Vector2(data.positionX, data.positionY), data.rotated);
         }
         else {
             Debug.LogError("To spawn furniture, 'data' must have a transform");
@@ -147,7 +147,7 @@ public class Furniture : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     [System.Serializable]
     public struct Data {
         public string name;
-        public float width, height;
+        public float width, length;
 
         public bool hasTransform { get; private set; }
         public float positionX { get; private set; }
@@ -157,7 +157,7 @@ public class Furniture : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         public Data(string name, Vector2 size) {
             this.name = name;
             width = size.x;
-            height = size.y;
+            length = size.y;
 
             hasTransform = false;
             positionX = 0;
@@ -167,7 +167,7 @@ public class Furniture : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         public Data(string name, Vector2 size, Vector2 position, bool rotated) {
             this.name = name;
             width = size.x;
-            height = size.y;
+            length = size.y;
 
             hasTransform = true;
             positionX = position.x;
@@ -177,7 +177,7 @@ public class Furniture : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         public Data(Data data, Vector2 position, bool rotated) {
             name = data.name;
             width = data.width;
-            height = data.height;
+            length = data.length;
 
             hasTransform = true;
             positionX = position.x;

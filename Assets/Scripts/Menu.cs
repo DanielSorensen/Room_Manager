@@ -20,6 +20,7 @@ public class Menu : MonoBehaviour {
     public Vector2 extraCameraFactor;
     public Image room;
     public TextMeshProUGUI roomName;
+    public float scrollSpeed;
     [Header("Furniture Window")]
     public RectTransform furnitureWindow;
     public RectTransform furnitureWindowContent;
@@ -54,7 +55,8 @@ public class Menu : MonoBehaviour {
 
     void Update() {
         if(SceneManager.GetActiveScene().name == "Room") {
-
+            float scroll = -Input.GetAxisRaw("Mouse ScrollWheel") * scrollSpeed;
+            Camera.main.orthographicSize *= scroll + 1;
         }
     }
 

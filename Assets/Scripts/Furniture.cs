@@ -103,7 +103,7 @@ public class Furniture : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
             rotated = !rotated;
             RoomManager.SaveRoom(RoomManager.currentRoom);
         }
-        if(Input.GetMouseButtonUp(2) && pointerOver) {
+        if(Input.GetKeyDown(KeyCode.Delete) && pointerOver) {
             RoomManager.currentRoom.furnitureData.RemoveAt(index);
             RoomManager.SaveRoom(RoomManager.currentRoom);
             Destroy(gameObject);
